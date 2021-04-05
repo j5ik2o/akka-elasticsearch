@@ -77,7 +77,7 @@ val dependenciesCommonSettings = Seq(
   libraryDependencies ++= Seq(
       "com.typesafe.akka"       %% "akka-slf4j"          % akkaVersion,
       "com.typesafe.akka"       %% "akka-stream"         % akkaVersion,
-      "org.apache.logging.log4j" % "log4j-to-slf4j"      % "2.11.1",
+      "org.apache.logging.log4j" % "log4j-to-slf4j"      % "2.11.2",
       "org.slf4j"                % "slf4j-api"           % "1.7.30",
       "org.testcontainers"       % "testcontainers"      % "1.15.2"         % Test,
       "org.testcontainers"       % "elasticsearch"       % "1.15.2"         % Test,
