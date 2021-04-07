@@ -47,32 +47,34 @@ case class ElasticsearchStreamClient(
       }
   }
 
+  sealed trait FlowControlCommand
+  case object First                 extends FlowControlCommand
+  case class Next(scrollId: String) extends FlowControlCommand
+  case object Complete              extends FlowControlCommand
+
   def searchRequestSource(
       searchRequest: SearchRequest,
       scroll: Scroll
   ): Source[SearchResponse, NotUsed] = {
-    def scrollLoop(scrollId: String): Source[SearchResponse, NotUsed] = {
-      Source.unfold[Unit, SearchResponse](()) { _ =>
+    Source.unfold[FlowControlCommand, SearchResponse](First) {
+      case Complete =>
+        None
+      case First =>
+        val searchResponse = restHighLevelClient.search(searchRequest.scroll(scroll), options)
+        val searchHits     = searchResponse.getHits.getHits
+        if (searchHits != null && searchHits.nonEmpty) {
+          Some((Next(searchResponse.getScrollId), searchResponse))
+        } else {
+          Some((Complete, searchResponse))
+        }
+      case Next(scrollId) =>
         val searchScrollRequest = new SearchScrollRequest(scrollId).scroll(scroll)
         val nextResponse        = restHighLevelClient.scroll(searchScrollRequest, options)
         val searchHits          = nextResponse.getHits.getHits
         if (searchHits != null && searchHits.nonEmpty) {
-          Some(((), nextResponse))
+          Some((Next(nextResponse.getScrollId), nextResponse))
         } else
           None
-      }
     }
-    Source
-      .single(searchRequest).map { request =>
-        restHighLevelClient.search(request.scroll(scroll), options)
-      }
-      .flatMapConcat { searchResponse =>
-        val searchHits = searchResponse.getHits.getHits
-        if (searchHits != null && searchHits.nonEmpty) {
-          scrollLoop(searchResponse.getScrollId)
-        } else {
-          Source.single(searchResponse)
-        }
-      }
   }
 }
