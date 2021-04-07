@@ -1,6 +1,7 @@
 package com.github.j5ik2o.ak.es
 
 import akka.NotUsed
+import akka.stream.Attributes
 import akka.stream.scaladsl.{ Concat, Flow, Source }
 import org.elasticsearch.action.{ DocWriteRequest, DocWriteResponse }
 import org.elasticsearch.action.bulk.{ BulkItemResponse, BulkRequest, BulkResponse }
@@ -50,28 +51,25 @@ case class ElasticsearchStreamClient(
       searchRequest: SearchRequest,
       scroll: Scroll
   ): Source[SearchResponse, NotUsed] = {
-    @tailrec
-    def scrollLoop(
-        scrollId: String,
-        acc: Source[SearchResponse, NotUsed]
-    ): Source[SearchResponse, NotUsed] = {
-      val searchScrollRequest = new SearchScrollRequest(scrollId).scroll(scroll)
-      val nextResponse        = restHighLevelClient.scroll(searchScrollRequest, options)
-      val searchHits          = nextResponse.getHits.getHits
-      if (searchHits != null && searchHits.nonEmpty) {
-        val result = Source.combine(acc, Source.single(nextResponse))(Concat(_))
-        scrollLoop(scrollId, result)
-      } else {
-        acc
+    def scrollLoop(scrollId: String): Source[SearchResponse, NotUsed] = {
+      Source.unfold[Unit, SearchResponse](()) { _ =>
+        val searchScrollRequest = new SearchScrollRequest(scrollId).scroll(scroll)
+        val nextResponse        = restHighLevelClient.scroll(searchScrollRequest, options)
+        val searchHits          = nextResponse.getHits.getHits
+        if (searchHits != null && searchHits.nonEmpty) {
+          Some(((), nextResponse))
+        } else
+          None
       }
     }
     Source
       .single(searchRequest).map { request =>
         restHighLevelClient.search(request.scroll(scroll), options)
-      }.flatMapConcat { searchResponse =>
+      }
+      .flatMapConcat { searchResponse =>
         val searchHits = searchResponse.getHits.getHits
         if (searchHits != null && searchHits.nonEmpty) {
-          scrollLoop(searchResponse.getScrollId, Source.single(searchResponse))
+          scrollLoop(searchResponse.getScrollId)
         } else {
           Source.single(searchResponse)
         }
