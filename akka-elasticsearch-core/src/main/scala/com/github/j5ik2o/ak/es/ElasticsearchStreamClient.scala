@@ -62,19 +62,20 @@ case class ElasticsearchStreamClient(
       case First =>
         val searchResponse = restHighLevelClient.search(searchRequest.scroll(scroll), options)
         val searchHits     = searchResponse.getHits.getHits
-        if (searchHits != null && searchHits.nonEmpty) {
+        if (searchHits != null && searchHits.nonEmpty)
           Some((Next(searchResponse.getScrollId), searchResponse))
-        } else {
+        else
           Some((Complete, searchResponse))
-        }
+
       case Next(scrollId) =>
         val searchScrollRequest = new SearchScrollRequest(scrollId).scroll(scroll)
         val nextResponse        = restHighLevelClient.scroll(searchScrollRequest, options)
         val searchHits          = nextResponse.getHits.getHits
-        if (searchHits != null && searchHits.nonEmpty) {
+        if (searchHits != null && searchHits.nonEmpty)
           Some((Next(nextResponse.getScrollId), nextResponse))
-        } else
-          None
+        else
+          Some((Complete, nextResponse))
+
     }
   }
 }
