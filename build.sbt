@@ -1,5 +1,5 @@
-val scala212Version = "2.12.13"
-val scala213Version = "2.13.5"
+import Dependencies._
+import Dependencies.Versions._
 
 def crossScalacOptions(scalaVersion: String): Seq[String] =
   CrossVersion.partialVersion(scalaVersion) match {
@@ -44,8 +44,8 @@ lazy val deploySettings = Seq(
 
 lazy val baseSettings = Seq(
   organization := "com.github.j5ik2o",
-  scalaVersion := scala213Version,
-  crossScalaVersions := Seq(scala212Version, scala213Version),
+  scalaVersion := Versions.scala213Version,
+  crossScalaVersions := Seq(Versions.scala212Version, Versions.scala213Version),
   scalacOptions ++= (Seq(
       "-feature",
       "-deprecation",
@@ -68,23 +68,18 @@ lazy val baseSettings = Seq(
     )
 )
 
-val akkaVersion                = "2.6.13"
-val testcontainersScalaVersion = "0.39.3"
-val scalaTestVersion           = "3.2.6"
-val logbackVersion             = "1.2.3"
-
 val dependenciesCommonSettings = Seq(
   libraryDependencies ++= Seq(
-      "com.typesafe.akka"       %% "akka-slf4j"          % akkaVersion,
-      "com.typesafe.akka"       %% "akka-stream"         % akkaVersion,
-      "org.apache.logging.log4j" % "log4j-to-slf4j"      % "2.11.1",
-      "org.slf4j"                % "slf4j-api"           % "1.7.30",
-      "org.testcontainers"       % "testcontainers"      % "1.15.2"         % Test,
-      "org.testcontainers"       % "elasticsearch"       % "1.15.2"         % Test,
-      "org.scalatest"           %% "scalatest"           % scalaTestVersion % Test,
-      "ch.qos.logback"           % "logback-classic"     % logbackVersion   % Test,
-      "com.typesafe.akka"       %% "akka-testkit"        % akkaVersion      % Test,
-      "com.typesafe.akka"       %% "akka-stream-testkit" % akkaVersion      % Test
+      typesafe.akka.slf4j,
+      typesafe.akka.stream,
+      apache.log4jToSlf4j,
+      slf4j.api,
+      testcontainers.testcontainers              % Test,
+      testcontainers.testcontainersElasticsearch % Test,
+      scalatest.scalatest                        % Test,
+      logback.classic                            % Test,
+      typesafe.akka.testkit                      % Test,
+      typesafe.akka.streamTestkit                % Test
     ),
   libraryDependencies ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
@@ -102,7 +97,7 @@ val `akka-elasticsearch-core` = (project in file("akka-elasticsearch-core"))
   .settings(
     name := "akka-elasticsearch-core",
     libraryDependencies ++= Seq(
-        "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "7.12.0"
+        elasticsearch.highLevelClient
       ),
     parallelExecution in Test := false
   )
