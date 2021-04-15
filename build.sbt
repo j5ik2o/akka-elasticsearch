@@ -9,41 +9,18 @@ def crossScalacOptions(scalaVersion: String): Seq[String] =
       Seq("-Yinline-warnings")
   }
 
-lazy val deploySettings = Seq(
-  sonatypeProfileName := "com.github.j5ik2o",
-  publishMavenStyle := true,
-  publishArtifact in Test := false,
-  pomIncludeRepository := { _ => false },
-  pomExtra := {
-    <url>https://github.com/j5ik2o/akka-kinesis</url>
-      <licenses>
-        <license>
-          <name>Apache 2</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-      </licenses>
-      <scm>
-        <url>git@github.com:j5ik2o/akka-kinesis.git</url>
-        <connection>scm:git:github.com/j5ik2o/akka-kinesis</connection>
-        <developerConnection>scm:git:git@github.com:j5ik2o/akka-kinesis.git</developerConnection>
-      </scm>
-      <developers>
-        <developer>
-          <id>j5ik2o</id>
-          <name>Junichi Kato</name>
-        </developer>
-      </developers>
-  },
-  publishTo := sonatypePublishToBundle.value,
-  credentials := {
-    val ivyCredentials = (baseDirectory in LocalRootProject).value / ".credentials"
-    val gpgCredentials = (baseDirectory in LocalRootProject).value / ".gpgCredentials"
-    Credentials(ivyCredentials) :: Credentials(gpgCredentials) :: Nil
-  }
-)
-
 lazy val baseSettings = Seq(
   organization := "com.github.j5ik2o",
+  homepage := Some(url("https://github.com/j5ik2o/akka-elasticsearch")),
+  licenses := List("The MIT License" -> url("http://opensource.org/licenses/MIT")),
+  developers := List(
+      Developer(
+        id = "j5ik2o",
+        name = "Junichi Kato",
+        email = "j5ik2o@gmail.com",
+        url = url("https://blog.j5ik2o.me")
+      )
+    ),
   scalaVersion := Versions.scala213Version,
   crossScalaVersions := Seq(Versions.scala212Version, Versions.scala213Version),
   scalacOptions ++= (Seq(
@@ -61,8 +38,9 @@ lazy val baseSettings = Seq(
       Resolver.sonatypeRepo("releases"),
       "es-snapshots" at "https://snapshots.elastic.co/maven/"
     ),
-  parallelExecution in Test := false,
-  scalafmtOnCompile in ThisBuild := true,
+  Test / publishArtifact := false,
+  Test / parallelExecution := false,
+  ThisBuild / scalafmtOnCompile := true,
   envVars := Map(
       "AWS_REGION" -> "ap-northeast-1"
     )
@@ -93,7 +71,7 @@ val dependenciesCommonSettings = Seq(
 )
 
 val `akka-elasticsearch-core` = (project in file("akka-elasticsearch-core"))
-  .settings(baseSettings, dependenciesCommonSettings, deploySettings)
+  .settings(baseSettings, dependenciesCommonSettings)
   .settings(
     name := "akka-elasticsearch-core",
     libraryDependencies ++= Seq(
@@ -103,6 +81,6 @@ val `akka-elasticsearch-core` = (project in file("akka-elasticsearch-core"))
   )
 
 val `akka-elasticsearch-root` = (project in file("."))
-  .settings(baseSettings, deploySettings)
+  .settings(baseSettings)
   .settings(name := "akka-elasticsearch-root")
   .aggregate(`akka-elasticsearch-core`)
