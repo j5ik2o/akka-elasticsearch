@@ -66,7 +66,7 @@ jobs:
   automerge:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    needs: [test, fossa]
+    needs: test
     steps:
       - name: Generate token
         id: generate_token
