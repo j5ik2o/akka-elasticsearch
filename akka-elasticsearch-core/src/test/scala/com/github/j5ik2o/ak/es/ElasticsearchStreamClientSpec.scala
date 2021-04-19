@@ -103,9 +103,8 @@ class ElasticsearchStreamClientSpec
             new Scroll(TimeValue.timeValueMinutes(1))
           )
           .withAttributes(ActorAttributes.dispatcher("blocking-io-dispatcher"))
-          .zipWithIndex.runForeach {
-            case (response, index) =>
-              println(s"$index: response = $response")
+          .zipWithIndex.runForeach { case (response, index) =>
+            println(s"$index: response = $response")
           }
       Await.result(future, Duration.Inf)
 
