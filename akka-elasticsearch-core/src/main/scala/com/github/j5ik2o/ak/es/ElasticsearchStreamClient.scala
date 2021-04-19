@@ -1,8 +1,7 @@
 package com.github.j5ik2o.ak.es
 
 import akka.NotUsed
-import akka.stream.Attributes
-import akka.stream.scaladsl.{ Concat, Flow, Source }
+import akka.stream.scaladsl.{ Flow, Source }
 import org.elasticsearch.action.{ DocWriteRequest, DocWriteResponse }
 import org.elasticsearch.action.bulk.{ BulkItemResponse, BulkRequest, BulkResponse }
 import org.elasticsearch.action.index.{ IndexRequest, IndexResponse }
@@ -10,7 +9,6 @@ import org.elasticsearch.action.search.{ SearchRequest, SearchResponse, SearchSc
 import org.elasticsearch.client.{ RequestOptions, RestHighLevelClient }
 import org.elasticsearch.search.Scroll
 
-import scala.annotation.tailrec
 import scala.jdk.CollectionConverters._
 
 case class ElasticsearchStreamClient(
