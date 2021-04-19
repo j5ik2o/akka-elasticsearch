@@ -31,16 +31,20 @@ lazy val baseSettings = Seq(
       "UTF-8",
       "-language:_",
       "-Ydelambdafy:method",
-      "-target:jvm-1.8"
+      "-target:jvm-1.8",
+      "-Yrangepos",
+      "-Ywarn-unused"
     ) ++ crossScalacOptions(scalaVersion.value)),
   resolvers ++= Seq(
       Resolver.sonatypeRepo("snapshots"),
       Resolver.sonatypeRepo("releases"),
       "es-snapshots" at "https://snapshots.elastic.co/maven/"
     ),
+  ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(scalaVersion.value),
+  semanticdbEnabled := true,
+  semanticdbVersion := scalafixSemanticdb.revision,
   Test / publishArtifact := false,
   Test / parallelExecution := false,
-  ThisBuild / scalafmtOnCompile := true,
   envVars := Map(
       "AWS_REGION" -> "ap-northeast-1"
     )
@@ -84,3 +88,7 @@ val `akka-elasticsearch-root` = (project in file("."))
   .settings(baseSettings)
   .settings(name := "akka-elasticsearch-root")
   .aggregate(`akka-elasticsearch-core`)
+
+// --- Custom commands
+addCommandAlias("lint", ";scalafmtCheck;test:scalafmtCheck;scalafmtSbtCheck;scalafixAll --check")
+addCommandAlias("fmt", ";scalafmtAll;scalafmtSbt")
