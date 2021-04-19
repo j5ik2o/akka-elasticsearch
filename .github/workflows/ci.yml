@@ -63,10 +63,16 @@ jobs:
         run: sbt -v ++${{ matrix.scala }} test
       - name: clean up
         run: "${GITHUB_WORKSPACE}/.github/clean-up.sh"
+  fossa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fossa-contrib/fossa-action@v1
+        with:
+          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
   automerge:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    needs: test
+    needs: [test, fossa]
     steps:
       - name: Generate token
         id: generate_token
