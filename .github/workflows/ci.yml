@@ -8,6 +8,7 @@ on:
       - '**.java'
       - '**.sbt'
       - '.scalafmt.conf'
+      - 'project/build.properties'
       - '.github/workflows/ci.yml'
   pull_request:
     branches:
@@ -17,6 +18,7 @@ on:
       - '**.java'
       - '**.sbt'
       - '.scalafmt.conf'
+      - 'project/build.properties'
       - '.github/workflows/ci.yml'
   schedule:
     - cron: '0 * * * *'
