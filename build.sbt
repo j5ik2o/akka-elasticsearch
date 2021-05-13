@@ -66,7 +66,7 @@ val dependenciesCommonSettings = Seq(
   libraryDependencies ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2L, scalaMajor)) if scalaMajor <= 12 =>
-        Seq("org.scala-lang.modules" %% "scala-collection-compat" % "2.4.3")
+        Seq("org.scala-lang.modules" %% "scala-collection-compat" % "2.4.4")
       case _ =>
         Seq.empty
     }
