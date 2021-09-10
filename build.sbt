@@ -11,8 +11,8 @@ def crossScalacOptions(scalaVersion: String): Seq[String] =
 
 lazy val baseSettings = Seq(
   organization := "com.github.j5ik2o",
-  homepage := Some(url("https://github.com/j5ik2o/akka-elasticsearch")),
-  licenses := List("The MIT License" -> url("http://opensource.org/licenses/MIT")),
+  homepage     := Some(url("https://github.com/j5ik2o/akka-elasticsearch")),
+  licenses     := List("The MIT License" -> url("http://opensource.org/licenses/MIT")),
   developers := List(
     Developer(
       id = "j5ik2o",
@@ -21,7 +21,7 @@ lazy val baseSettings = Seq(
       url = url("https://blog.j5ik2o.me")
     )
   ),
-  scalaVersion := Versions.scala212Version,
+  scalaVersion       := Versions.scala212Version,
   crossScalaVersions := Seq(Versions.scala212Version, Versions.scala213Version),
   scalacOptions ++= (Seq(
     "-feature",
@@ -41,10 +41,10 @@ lazy val baseSettings = Seq(
     "es-snapshots" at "https://snapshots.elastic.co/maven/"
   ),
   ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(scalaVersion.value),
-  semanticdbEnabled := true,
-  semanticdbVersion := scalafixSemanticdb.revision,
-  Test / publishArtifact := false,
-  Test / parallelExecution := false,
+  semanticdbEnabled                      := true,
+  semanticdbVersion                      := scalafixSemanticdb.revision,
+  Test / publishArtifact                 := false,
+  Test / parallelExecution               := false,
   envVars := Map(
     "AWS_REGION" -> "ap-northeast-1"
   )
