@@ -46,9 +46,9 @@ case class ElasticsearchStreamClient(
   }
 
   sealed trait FlowControlCommand
-  case object First                 extends FlowControlCommand
+  case object First extends FlowControlCommand
   case class Next(scrollId: String) extends FlowControlCommand
-  case object Complete              extends FlowControlCommand
+  case object Complete extends FlowControlCommand
 
   def searchRequestSource(
       searchRequest: SearchRequest,
