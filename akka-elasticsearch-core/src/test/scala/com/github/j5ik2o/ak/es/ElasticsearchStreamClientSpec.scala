@@ -8,7 +8,7 @@ import org.apache.http.HttpHost
 import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.action.search.SearchRequest
 import org.elasticsearch.client.{ RequestOptions, RestClient, RestHighLevelClient }
-import org.elasticsearch.common.unit.TimeValue
+import org.elasticsearch.core.TimeValue
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.Scroll
 import org.elasticsearch.search.builder.SearchSourceBuilder
