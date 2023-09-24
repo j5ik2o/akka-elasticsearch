@@ -23,7 +23,7 @@ object Dependencies {
   }
 
   object apache {
-    val log4jToSlf4j = "org.apache.logging.log4j" % "log4j-to-slf4j" % "2.14.1"
+    val log4jToSlf4j = "org.apache.logging.log4j" % "log4j-to-slf4j" % "2.20.0"
   }
 
   object slf4j {
