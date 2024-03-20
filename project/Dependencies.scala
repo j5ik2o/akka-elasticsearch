@@ -32,8 +32,8 @@ object Dependencies {
   }
 
   object testcontainers {
-    val testcontainers              = "org.testcontainers" % "testcontainers" % "1.19.6"
-    val testcontainersElasticsearch = "org.testcontainers" % "elasticsearch"  % "1.19.6"
+    val testcontainers              = "org.testcontainers" % "testcontainers" % "1.19.7"
+    val testcontainersElasticsearch = "org.testcontainers" % "elasticsearch"  % "1.19.7"
 
   }
 
