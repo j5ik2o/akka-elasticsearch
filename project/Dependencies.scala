@@ -46,7 +46,7 @@ object Dependencies {
   }
 
   object elasticsearch {
-    val highLevelClient = "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "7.17.20"
+    val highLevelClient = "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "7.17.21"
   }
 
 }
