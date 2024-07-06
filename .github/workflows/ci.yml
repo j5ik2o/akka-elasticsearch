@@ -61,4 +61,4 @@ jobs:
           java-version: ${{ matrix.jdk }}
           cache: 'sbt'
       - name: sbt test
-        run: sbt -v ++${{ matrix.scala }} test
+        run: sbt -v '++${{ matrix.scala }}'' test
